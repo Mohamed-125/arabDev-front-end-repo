@@ -2,6 +2,7 @@
 import React, { useState, createContext, useEffect } from 'react'
 import axios from 'axios'
 export const PostsContext = createContext()
+
 const PostsContextProvider = ({ children }) => {
   const [posts, setPosts] = useState([])
 

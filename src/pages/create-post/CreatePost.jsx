@@ -4,16 +4,20 @@ import PreviewPost from './PreviewPost.jsx'
 import WritePost from './WritePost.jsx'
 import CreateButton from 'components/buttons/CreateButton'
 import { IsLoggedInContext } from '../../context/IsLoggedInContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-const CreatePost = ({ isRendered, setIsRendered }) => {
+import { PostsContext } from '../../context/PostsContext'
+const CreatePost = ({ isRendered, setIsRendered, link }) => {
   const [isWriting, setIsWriting] = useState(true)
   const [postTitle, setPostTitle] = useState('')
   const [postTags, setPostTags] = useState([])
   const [markdown, setMarkdown] = useState('')
-  // const [postImg, setPostImg] = useState({})
+
   const { isLoggedIn } = useContext(IsLoggedInContext)
+  const { setPosts } = useContext(PostsContext)
+  const { state } = useLocation()
+  const { id } = useParams()
   const navigate = useNavigate()
   useEffect(() => {
     if (isRendered) {
@@ -49,7 +53,7 @@ const CreatePost = ({ isRendered, setIsRendered }) => {
   const publishNewPost = async () => {
     try {
       const response = await axios.put(
-        'http://localhost/api/v1/feed/',
+        link ? link + state.slug + '-' + id : 'http://localhost/api/v1/feed/',
         {
           title: postTitle,
           content: markdown,
@@ -60,6 +64,16 @@ const CreatePost = ({ isRendered, setIsRendered }) => {
           },
         }
       )
+      const getPosts = async () => {
+        try {
+          const response = await axios.get('http://localhost/api/v1/feed/')
+          console.log(response.data)
+          setPosts(response.data)
+        } catch (err) {
+          console.error(err)
+        }
+      }
+      getPosts()
       console.log(response)
       navigate(-1)
     } catch (err) {
@@ -99,6 +113,8 @@ const CreatePost = ({ isRendered, setIsRendered }) => {
           postTitle={postTitle}
           setPostTags={setPostTags}
           markdown={markdown}
+          title={state?.title}
+          content={state?.content}
         />
       ) : (
         <PreviewPost markdown={markdown} />

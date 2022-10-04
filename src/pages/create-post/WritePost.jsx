@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { AiFillCloseCircle } from 'react-icons/ai'
-const WritePost = ({ markdown, setMarkdown, postTitle, setPostTitle, setPostTags, postTags }) => {
+const WritePost = ({ markdown, title, content, setMarkdown, postTitle, setPostTitle, setPostTags, postTags }) => {
   useEffect(() => {
     tagsInputRef.current.value = null
   }, [postTags])
@@ -29,8 +29,8 @@ const WritePost = ({ markdown, setMarkdown, postTitle, setPostTitle, setPostTags
           setPostTitle(e.target.value)
         }}
         placeholder="اكتب عنوان المنشور"
-        required
-        defaultValue={postTitle}
+        required /* eslint-disable */
+        defaultValue={title ? title : postTitle}
         className="w-full p-2 border-2 rounded-md mt-6 border-gray-400"
       />
       <div className="border-2 flex gap-3 mt-7  rounded-md py-2 px-2 flex-wrap border-black ">
@@ -69,7 +69,8 @@ const WritePost = ({ markdown, setMarkdown, postTitle, setPostTitle, setPostTags
       </div>
 
       <textarea
-        defaultValue={markdown}
+        /* eslint-disable */
+        defaultValue={content ? content : markdown}
         className="h-[500px] w-full mt-10 rounded-lg border-[1.5px] border-gray-300 shadow-md px-4 py-7 text-[20px]"
         onChange={e => {
           setMarkdown(e.target.value.replace('#', '##').replace('<', ' &lt;h1&gt;').replace('>', '&lt;/h1&gt;'))

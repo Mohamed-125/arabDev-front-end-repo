@@ -1,20 +1,47 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import Button from 'react-bootstrap/Button'
 import Container from 'react-bootstrap/Container'
 import Form from 'react-bootstrap/Form'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import './navbar.css'
 import CreateButton from 'components/buttons/CreateButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { IsLoggedInContext } from '../../context/IsLoggedInContext'
-
+import { PostsContext } from '../../context/PostsContext'
+// eslint-disable
 import Profiledropdown from './Profiledropdown'
 
-const NavigationBar = () => {
+const NavigationBar = ({ setSearchedPosts, searchedPosts }) => {
   const { isLoggedIn } = useContext(IsLoggedInContext)
+  const navigate = useNavigate()
+  const { posts } = useContext(PostsContext)
+  const location = useLocation()
+  const [value, setValue] = useState('')
+  useEffect(() => {
+    if (location.pathname.includes('/q/')) {
+      setValue(location.pathname.replaceAll('%20', ' ').slice(3))
+    }
+  }, [])
+  const searchSubmitHandler = e => {
+    console.log(location)
+    if (e.target.children[0].value) {
+      setSearchedPosts(
+        posts.filter(post =>
+          post.title
+            .toLowerCase()
+            .trim()
+            .replace(' ', '')
+            .includes(e.target.children[0].value.trim().toLowerCase().replace(' ', ''))
+        )
+      )
+      navigate(`/q/${e.target.children[0].value.trim().toLowerCase()}`)
+    } else {
+      navigate(`/`)
+    }
+  }
   return (
     <Navbar className="shadow-mdsticky-top bg-white" expand="lg">
       <Container className="py-[2px] ">
@@ -23,9 +50,21 @@ const NavigationBar = () => {
         </Navbar.Brand>
         <Navbar.Toggle className="shadow-none" aria-controls="navbarScroll" />
         <Navbar.Collapse style={{ transition: 'ease 0.4s' }} id="navbarScroll">
-          <Form className="d-flex items-center md:mt-3 mr-auto position-relative">
-            <Form.Control type="search" placeholder="ابحث هنا" className="me-2" aria-label="Search" />
-            <Button className="position-absolute search-button">
+          <Form
+            onSubmit={e => {
+              e.preventDefault()
+              searchSubmitHandler(e)
+            }}
+            className="d-flex items-center md:mt-3 mr-auto position-relative"
+          >
+            <Form.Control
+              defaultValue={value}
+              type="search"
+              placeholder="ابحث هنا"
+              className="me-2"
+              aria-label="Search"
+            />
+            <Button type="submit" className="position-absolute search-button">
               <FontAwesomeIcon icon={faSearch} />
             </Button>
           </Form>

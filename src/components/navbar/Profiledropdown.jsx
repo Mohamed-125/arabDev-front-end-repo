@@ -15,7 +15,7 @@ function Profiledropdown() {
   } = useContext(UserDataContext)
 
   const logoutUserHandler = () => {
-    // setUserData({})
+    window.location.reload()
     setIsLoggedIn(false)
     setAuthTokens({ refreshToken: null, accessToken: null })
     Cookies.set('user_name', null)
@@ -47,7 +47,7 @@ function Profiledropdown() {
         Mohamed ibrahim
       </Dropdown.Item>
       <Dropdown.Divider />
-      <Dropdown.Item className="my-[0.25rem] text-end" href="#/action-2">
+      <Dropdown.Item as={Link} to="/reading-list" className="my-[0.25rem] text-end" href="#/action-2">
         المحفوظات
       </Dropdown.Item>
       <Dropdown.Item as={Link} to="/new" className="my-[0.25rem] text-end" href="#/action-2">
@@ -67,7 +67,7 @@ function Profiledropdown() {
     <div className="flex flex-col items-center gap-4 text-[#0000008c]">
       <Link to="/profile"> Mohamed ibrahim </Link>
       <a> الاعدادت</a>
-      <a> المحفوظات</a>
+      <Link to="/reading-list">المحفوظات</Link>
       <CreateButton
         onClick={logoutUserHandler}
         className="bg-blue-600 !mx-[1rem] my-[0.25rem] border-none text-white mt"

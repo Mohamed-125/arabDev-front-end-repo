@@ -51,9 +51,8 @@ const Login = () => {
   const submitHandler = async data => {
     try {
       const grant_type = 'password'
-      const client_id = 'b6y7PdP7i5ffqNfaRBsmdcbDWGigHlxeUP2b2Dfl'
-      const client_secret =
-        'kKyg5EBvL8mAt8Z7DEQ2nsQqrBmXtVCSgau318tkqxBvCiiP3wFP6cn1AizTdRVgKnbj5wwSWCTVMkMf4sa89ByV6eSkmZHjYXieRnHQie7QBRhe8Jnw7RvMZWjJ79qZ'
+      const client_id = process.env.KEY
+      const client_secret = process.env.SECRET
       const response = await axios.post('http://localhost/api/v1/auth/token/', {
         username: data.userName,
         password: data.password,

@@ -5,12 +5,12 @@ import rehypeHighlight from 'rehype-highlight'
 import slug from 'remark-slug'
 import 'highlight.js/styles/github.css'
 import hljs from 'highlight.js'
-
 import remarkToc from 'remark-toc'
+
 const PreviewPost = ({ markdown }) => {
   useEffect(() => {
     hljs.safeMode()
-    hljs.initHighlightingOnLoad()
+    hljs.highlightAll()
   }, [])
   return (
     <Container>
